@@ -1,18 +1,6 @@
 ﻿USE StudentCoursesManagement
 GO
-<<<<<<< HEAD
 
-=======
----------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
-UPDATE	dbo.DANGKY 
-SET		NAM = (SELECT	NAM
-			   FROM		dbo.KETQUA KQ
-			   WHERE	KQ.MASV = MASV)
-			   
----------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
->>>>>>> 754f12c759dcd18f2aa00b5bd9ce7444d5ca544a
 --R1
 --LOAI PHAI TUONG XUNG VOI DTB
 --BẢNG TẦM ẢNH HƯỞNG: KETQUA: I(+), D(-), U(+(DIEMTB, XEPLOAI))
@@ -110,62 +98,28 @@ END
 --BẢNG TẦM ẢNH HƯỞNG: DANGKY: I(+), D(-), U(-)
 IF OBJECT_ID('UTR_RB3', 'TR') IS NOT NULL
 	DROP TRIGGER UTR_RB3
-=======
----------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
---SP1 TINH DIEM TRUNG BINH
-IF OBJECT_ID('TINHDIEMTB','P') IS NOT NULL
-	DROP PROC TINHDIEMTB
-GO
-CREATE PROCEDURE TINHDIEMTB @MASV INT, @NAM INT
-AS BEGIN
-	DECLARE @TONGMON INT, @TONGDIEM INT, @DTB REAL
-	
-	SET @TONGMON = (SELECT	COUNT(*)
-					FROM	dbo.DANGKY
-					WHERE	MASV = @MASV AND
-							NAM = @NAM)
-	SET @TONGDIEM = (SELECT		SUM(DIEM)
-					 FROM		dbo.DANGKY
-					 WHERE		MASV = @MASV AND
-								NAM = @NAM)
-	SET @DTB = @TONGDIEM / @TONGMON
-
-END
----------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
---SP2 XEPLOAI
-IF OBJECT_ID('XEPLOAI','P') IS NOT NULL
-	DROP PROC XEPLOAI
->>>>>>> 754f12c759dcd18f2aa00b5bd9ce7444d5ca544a
 GO
 CREATE TRIGGER UTR_RB3
-ON DANGKY
-FOR INSERT, UPDATE
+ON dbo.DANGKY
+FOR INSERT
 AS BEGIN
-<<<<<<< HEAD
-	IF ((SELECT		COUNT(*)
-		 FROM		Inserted) <> 0)
+	IF ((SELECT	COUNT(*)
+		 FROM	Inserted) > 0)
 	BEGIN
-	    DECLARE @MASV INT, @MAMH CHAR(5), @NAM INT, @HOCKY INT
-		SET @MASV = (SELECT MASV FROM Inserted)
-		SET @MAMH = (SELECT MAMH FROM Inserted)
-		SET @NAM = (SELECT NAM FROM Inserted)
-		SET @HOCKY = (SELECT HOCKY FROM Inserted)
-		IF ((SELECT		COUNT(*)
-			 FROM		dbo.DANGKY
-			 WHERE		MASV = @MASV AND @MAMH = MAMH AND 
-						@NAM = NAM AND HOCKY = @HOCKY) >= 8)
+		DECLARE @MASV INT, @MAMH CHAR(5), @NAM INT, @HOCKY INT
+		SET @MASV = (SELECT Inserted.MASV FROM Inserted)
+		SET @MAMH = (SELECT Inserted.MAMH FROM Inserted)
+		SET @NAM = (SELECT Inserted.NAM FROM Inserted)
+		SET @HOCKY = (SELECT Inserted.HOCKY FROM Inserted)
+
+		IF ((SELECT COUNT(*)
+			 FROM	dbo.DANGKY
+			 WHERE	MASV = @MASV AND MAMH = @MAMH AND
+					NAM = @NAM AND HOCKY = @HOCKY) >=8)
 		BEGIN
 			RAISERROR('RB1: ERROR',16,1)
 			ROLLBACK
 		END
-	END     
+	END
 END
-------------------------------------------------------------------
-=======
-	
-END
----------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
->>>>>>> 754f12c759dcd18f2aa00b5bd9ce7444d5ca544a
+
