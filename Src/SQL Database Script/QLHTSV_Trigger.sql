@@ -1,6 +1,18 @@
 ﻿USE StudentCoursesManagement
 GO
+<<<<<<< HEAD
 
+=======
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+UPDATE	dbo.DANGKY 
+SET		NAM = (SELECT	NAM
+			   FROM		dbo.KETQUA KQ
+			   WHERE	KQ.MASV = MASV)
+			   
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+>>>>>>> 754f12c759dcd18f2aa00b5bd9ce7444d5ca544a
 --R1
 --LOAI PHAI TUONG XUNG VOI DTB
 --BẢNG TẦM ẢNH HƯỞNG: KETQUA: I(+), D(-), U(+(DIEMTB, XEPLOAI))
@@ -56,7 +68,8 @@ AS BEGIN
 		END
 	END
 END
-
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 --R2
 --DTB BANG TONG DIEM CHIA TONG MON
 --NẾU UPDATE ĐIỂM Ở ĐĂNG KÍ THÌ CẬP NHẬT LẠI ĐIỂM TRUNG BINGH
@@ -90,17 +103,47 @@ AS BEGIN
 				NAM = @NAM
 	END
 END
+<<<<<<< HEAD
 
 --R3
 --KHÔNG CHO ĐĂNG KÍ QUÁ 8 MÔN
 --BẢNG TẦM ẢNH HƯỞNG: DANGKY: I(+), D(-), U(-)
 IF OBJECT_ID('UTR_RB3', 'TR') IS NOT NULL
 	DROP TRIGGER UTR_RB3
+=======
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+--SP1 TINH DIEM TRUNG BINH
+IF OBJECT_ID('TINHDIEMTB','P') IS NOT NULL
+	DROP PROC TINHDIEMTB
+GO
+CREATE PROCEDURE TINHDIEMTB @MASV INT, @NAM INT
+AS BEGIN
+	DECLARE @TONGMON INT, @TONGDIEM INT, @DTB REAL
+	
+	SET @TONGMON = (SELECT	COUNT(*)
+					FROM	dbo.DANGKY
+					WHERE	MASV = @MASV AND
+							NAM = @NAM)
+	SET @TONGDIEM = (SELECT		SUM(DIEM)
+					 FROM		dbo.DANGKY
+					 WHERE		MASV = @MASV AND
+								NAM = @NAM)
+	SET @DTB = @TONGDIEM / @TONGMON
+
+END
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+--SP2 XEPLOAI
+IF OBJECT_ID('XEPLOAI','P') IS NOT NULL
+	DROP PROC XEPLOAI
+>>>>>>> 754f12c759dcd18f2aa00b5bd9ce7444d5ca544a
 GO
 CREATE TRIGGER UTR_RB3
 ON DANGKY
 FOR INSERT, UPDATE
 AS BEGIN
+<<<<<<< HEAD
 	IF ((SELECT		COUNT(*)
 		 FROM		Inserted) <> 0)
 	BEGIN
@@ -120,3 +163,9 @@ AS BEGIN
 	END     
 END
 ------------------------------------------------------------------
+=======
+	
+END
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+>>>>>>> 754f12c759dcd18f2aa00b5bd9ce7444d5ca544a
